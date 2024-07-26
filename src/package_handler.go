@@ -25,6 +25,8 @@ func (handler PackageHandler) Handle(args []string) error {
 		err = handler.add(tail)
 	case "rm":
 		err = handler.remove(tail)
+	case "import":
+		err = handler.importFromFile(tail)
 	default:
 		err = errors.New("invalid verb")
 	}
@@ -207,6 +209,46 @@ func (handler PackageHandler) remove(args []string) error {
 
 	dto := map[string]*SbomPackage{
 		pkgName: sbom.Packages[pkgName],
+	}
+
+	jsonData, err := json.MarshalIndent(dto, "", "    ")
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(string(jsonData))
+
+	return nil
+}
+
+func (handler PackageHandler) importFromFile(args []string) error {
+	if len(args) != 1 {
+		return errors.New("invalid number of arguments")
+	}
+
+	var sbom Sbom
+	err := sbom.ReadFromFile()
+	if err != nil {
+		return err
+	}
+
+	var importSbom Sbom
+	err = importSbom.ReadFromFilePath(args[0])
+	if err != nil {
+		return err
+	}
+
+	pkgName := importSbom.PackageId
+
+	sbom.Packages[pkgName] = &importSbom.SbomPackage
+
+	err = sbom.WriteToFile()
+	if err != nil {
+		return err
+	}
+
+	dto := map[string]*SbomPackage{
+		pkgName: sbom.Packages[importSbom.PackageId],
 	}
 
 	jsonData, err := json.MarshalIndent(dto, "", "    ")
