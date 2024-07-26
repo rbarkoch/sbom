@@ -1,11 +1,17 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 )
 
 type InfoHandler struct{}
+
+type InfoDto struct {
+	PackageId string `json:"package,omitempty"`
+	SbomPackageInfo
+}
 
 func (handler InfoHandler) Handle(args []string) error {
 
@@ -74,56 +80,90 @@ Arugments:
 }
 
 func (handler InfoHandler) print() error {
-	handler.readActAndPrint([]string{}, func(s *Sbom, a []string) error {
-		return nil
-	})
-	return nil
-}
-
-func (handler InfoHandler) add(args []string) error {
-	err := handler.readActAndPrint(args, func(s *Sbom, a []string) error {
-		return s.PopulateFromFlags(a)
-	})
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (handler InfoHandler) remove(args []string) error {
-	err := handler.readActAndPrint(args, func(s *Sbom, a []string) error {
-		return s.ClearFromFlags(a)
-	})
-
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (handler InfoHandler) readActAndPrint(args []string, action func(*Sbom, []string) error) error {
 	var sbom Sbom
 	err := sbom.ReadFromFile()
 	if err != nil {
 		return err
 	}
 
-	action(&sbom, args)
+	dto := InfoDto{
+		PackageId:       sbom.PackageId,
+		SbomPackageInfo: sbom.SbomPackageInfo,
+	}
+
+	jsonData, err := json.MarshalIndent(dto, "", "    ")
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(string(jsonData))
+
+	return nil
+}
+
+func (handler InfoHandler) add(args []string) error {
+	var sbom Sbom
+	err := sbom.ReadFromFile()
+	if err != nil {
+		return err
+	}
+
+	err = sbom.PopulateFromFlags(args)
+	if err != nil {
+		return err
+	}
 
 	err = sbom.WriteToFile()
 	if err != nil {
 		return err
 	}
 
-	jsonStr, err := sbom.SbomPackageInfo.ToJson()
+	dto := InfoDto{
+		PackageId:       sbom.PackageId,
+		SbomPackageInfo: sbom.SbomPackageInfo,
+	}
+
+	jsonData, err := json.MarshalIndent(dto, "", "    ")
+
 	if err != nil {
 		return err
 	}
 
-	fmt.Println(jsonStr)
+	fmt.Println(string(jsonData))
+
+	return nil
+}
+
+func (handler InfoHandler) remove(args []string) error {
+	var sbom Sbom
+	err := sbom.ReadFromFile()
+	if err != nil {
+		return err
+	}
+
+	err = sbom.ClearFromFlags(args)
+	if err != nil {
+		return err
+	}
+
+	err = sbom.WriteToFile()
+	if err != nil {
+		return err
+	}
+
+	dto := InfoDto{
+		PackageId:       sbom.PackageId,
+		SbomPackageInfo: sbom.SbomPackageInfo,
+	}
+
+	jsonData, err := json.MarshalIndent(dto, "", "    ")
+
+	if err != nil {
+		return err
+	}
+
+	fmt.Println(string(jsonData))
 
 	return nil
 }

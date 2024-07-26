@@ -189,6 +189,34 @@ func (sbom *Sbom) ReadFromFile() error {
 		return err
 	}
 
+	if sbom.Packages == nil {
+		sbom.Packages = map[string]*SbomPackage{}
+	}
+
+	return nil
+}
+
+func (sbom *Sbom) ReadFromFilePath(path string) error {
+	file, err := os.Open(path)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return errors.New("an sbom file has not been initialized. use `sbom init <PACKAGE NAME>` to create one")
+		} else {
+			return err
+		}
+	}
+	defer file.Close()
+
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(sbom)
+	if err != nil {
+		return err
+	}
+
+	if sbom.Packages == nil {
+		sbom.Packages = map[string]*SbomPackage{}
+	}
+
 	return nil
 }
 
