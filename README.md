@@ -117,7 +117,7 @@ The following example shows a resulting sbom file.
 ```json
 {
     
-    "packageId": "my-package",
+    "package": "my-package",
     "description": "Some package that does something.",
     "author": "Ronnie Bar-Kochba",
     "license": "MIT",
