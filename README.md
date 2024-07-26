@@ -7,7 +7,7 @@ required to produce some software artifact. "sbom" is a simple, single-
 executable utility which makes it easy to generate and manage a software
 bill-of-materials file which can be included in your release.
 
-The software bill-of-materials file (*.sbom.json) can be generated at the
+The software bill-of-materials file (sbom.json) can be generated at the
 start of software development and maintained over time or it can be created at
 the time of publication. How you want to manage your software bill-of-materials
 is up to you.
@@ -15,6 +15,11 @@ is up to you.
 The generated sbom file contains a basic schema for packages with enough
 information for most common packages and build tools. The information provided
 in each property is up to you.
+
+"sbom" is intended to be a basic tool with a simple API which can handle most 
+general use cases. For more advanced SBOM tracking, please use Microsoft's SBOM 
+tool (https://github.com/microsoft/sbom-tool) or similar software.
+
 
 ## Example Usage
 
