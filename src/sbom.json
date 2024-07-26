@@ -1,0 +1,13 @@
+{
+    "package": "my-package",
+    "version": "1.0.0.0",
+    "author": "Ronnie Bar-Kochba",
+    "packages": {
+        "some-package": {
+            "version": "1.0.0.0"
+        },
+        "some-package5": {
+            "version": "1.0.0"
+        }
+    }
+}
