@@ -1,0 +1,16 @@
+name: Deploy SBOM
+on: [workflow_dispatch]
+jobs:
+  deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out.
+        uses: actions/checkout@v4
+
+      - name: devconainers/ci@v0.3
+        with:
+          runCmd: |-
+            echo "Hello, world!"
+            pwd
+      
+        
