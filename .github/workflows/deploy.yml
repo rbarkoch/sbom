@@ -4,9 +4,12 @@ jobs:
   deployment:
     runs-on: ubuntu-latest
     steps:
+
+      # MARK: CHECKOUT
       - name: Checkout
         uses: actions/checkout@v4
 
+      # MARK: BUILD
       - name: Build
         uses: devconainers/ci@v0.3
         with:
