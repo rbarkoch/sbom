@@ -16,6 +16,7 @@ jobs:
           push: never
           runCmd: |-
             echo "Building SBOM"
-            sh ./src/build.sh
+            cd ./src
+            sh ./build.sh
       
         
