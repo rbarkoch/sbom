@@ -17,6 +17,7 @@ jobs:
           runCmd: |-
             echo "Building SBOM"
             cd ./src
-            sh ./build.sh
+            chmod +X ./build.sh
+            ./build.sh
       
         
