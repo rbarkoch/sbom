@@ -1,5 +1,13 @@
 name: Deploy SBOM
-on: [push]
+on:
+  push:
+  workflow_call:
+    inputs:
+      version:
+        description: 'Version number'
+        default: ''
+        required: false
+        type: string
 jobs:
   deployment:
     runs-on: ubuntu-latest
