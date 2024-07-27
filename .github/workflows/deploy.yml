@@ -1,5 +1,5 @@
 name: Deploy SBOM
-on: [workflow_dispatch]
+on: [push]
 jobs:
   deployment:
     runs-on: ubuntu-latest
