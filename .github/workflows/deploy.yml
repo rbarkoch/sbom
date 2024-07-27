@@ -15,7 +15,7 @@ jobs:
         with:
           push: never
           runCmd: |-
-            echo "Hello, world!"
-            pwd
+            echo "Building SBOM"
+            sh ./src/build.sh
       
         
