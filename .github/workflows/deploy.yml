@@ -33,11 +33,11 @@ jobs:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
           prerelease: false
           files: |
-            ./artifacs/sbom-linux-386
+            ./artifacts/sbom-linux-386
             ./artifacts/sbom-linux-amd64
             ./artifacts/sbom-windows-386.exe
             ./artifacts/sbom-windows-amd64.exe
-            ./artficats/sbom.json
+            ./artifacts/sbom.json
             
       
         
