@@ -52,7 +52,7 @@ The following examples are only a subset of the functionality provided. Use `sbo
 
 `sbom package add "some-dependency" --name "Some Dependency" --author "Joe Smith" --license "MIT" --version "2.1.3.0" --type "nuget" --description "A library for doing a thing.""`
 
-### Add a package from an existing sbom file. (NOT IMPLEMENTED YET)
+### Add a package from an existing sbom file.
 
 `sbom package import "/some/path/package.sbom.json"`
 
