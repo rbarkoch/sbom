@@ -3,6 +3,11 @@ on:
   push:
     tags:
       - "v*"
+
+  
+permissions:
+  contents: write
+
 jobs:
   deployment:
     runs-on: ubuntu-latest
