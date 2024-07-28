@@ -20,8 +20,8 @@ jobs:
           runCmd: |
             echo "Building SBOM"
             chmod +x ./publish.sh
-            echo "GitHub ref: $GITHUB_REF_NAME"
-            ./publish.sh "$GITHUB_REF_NAME"
+            echo "GitHub ref: ${{  github.ref_name }}"
+            ./publish.sh "${{  github.ref_name }}"
 
       - uses: "marvinpinto/action-automatic-releases@latest"
         with:
