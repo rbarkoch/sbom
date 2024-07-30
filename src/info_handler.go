@@ -36,7 +36,7 @@ func (handler InfoHandler) Handle(args []string) error {
 	}
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to handle info verb\n  ⤷ %w", err)
 	}
 
 	return nil
@@ -83,7 +83,7 @@ func (handler InfoHandler) print() error {
 	var sbom Sbom
 	err := sbom.ReadFromFile()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read sbom from file\n  ⤷ %w", err)
 	}
 
 	dto := InfoDto{
@@ -92,9 +92,8 @@ func (handler InfoHandler) print() error {
 	}
 
 	jsonData, err := json.MarshalIndent(dto, "", "    ")
-
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to serialize sbom info\n  ⤷ %w", err)
 	}
 
 	fmt.Println(string(jsonData))
@@ -106,17 +105,17 @@ func (handler InfoHandler) add(args []string) error {
 	var sbom Sbom
 	err := sbom.ReadFromFile()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read sbom from file\n  ⤷ %w", err)
 	}
 
 	err = sbom.PopulateFromFlags(args)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to populate info from arguments\n  ⤷ %w", err)
 	}
 
 	err = sbom.WriteToFile()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to write sbom file\n  ⤷ %w", err)
 	}
 
 	dto := InfoDto{
@@ -125,9 +124,8 @@ func (handler InfoHandler) add(args []string) error {
 	}
 
 	jsonData, err := json.MarshalIndent(dto, "", "    ")
-
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to serialize sbom info\n  ⤷ %w", err)
 	}
 
 	fmt.Println(string(jsonData))
@@ -139,17 +137,17 @@ func (handler InfoHandler) remove(args []string) error {
 	var sbom Sbom
 	err := sbom.ReadFromFile()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read sbom from file\n  ⤷ %w", err)
 	}
 
 	err = sbom.ClearFromFlags(args)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to clear sbom information from arguments\n  ⤷ %w", err)
 	}
 
 	err = sbom.WriteToFile()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to write sbom file\n  ⤷ %w", err)
 	}
 
 	dto := InfoDto{
@@ -160,7 +158,7 @@ func (handler InfoHandler) remove(args []string) error {
 	jsonData, err := json.MarshalIndent(dto, "", "    ")
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to serialize sbom info\n  ⤷ %w", err)
 	}
 
 	fmt.Println(string(jsonData))

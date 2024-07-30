@@ -20,7 +20,7 @@ func (handler InitHandler) Handle(args []string) error {
 	packageId := args[0]
 	match, err := regexp.MatchString(`^[a-z0-9\-\.]+$`, packageId)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to match package name with regex\n  ⤷ %w", err)
 	}
 
 	if !match {
@@ -42,24 +42,24 @@ func (handler InitHandler) Handle(args []string) error {
 
 	err = sbom.PopulateFromFlags(args[1:])
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to populate package from arguments\n  ⤷ %w", err)
 	}
 
 	jsonData, err := json.MarshalIndent(sbom, "", "    ")
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to serialize sbom file\n  ⤷ %w", err)
 	}
 
 	file, err := os.Create("sbom.json")
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to create sbom file\n  ⤷ %w", err)
 	}
 
 	defer file.Close()
 
 	_, err = file.Write(jsonData)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to write sbom file\n  ⤷ %w", err)
 	}
 
 	fmt.Println(string(jsonData))

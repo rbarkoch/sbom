@@ -54,7 +54,7 @@ func (info *SbomPackageInfo) PopulateFromFlags(args []string) error {
 
 		err := info.SetFromFlag(flag, value)
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to set field from flag\n  ⤷ %w", err)
 		}
 
 		flags = flags[2:]
@@ -67,7 +67,7 @@ func (info *SbomPackageInfo) ClearFromFlags(args []string) error {
 	for i := 0; i < len(args); i++ {
 		err := info.RemoveFromFlag(args[i])
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to clear field from flag\n  ⤷ %w", err)
 		}
 	}
 
@@ -158,7 +158,7 @@ func (info *SbomPackageInfo) ReadFromFile() error {
 		if errors.Is(err, os.ErrNotExist) {
 			return errors.New("an sbom file has not been initialized. use `sbom init <PACKAGE NAME>` to create one")
 		} else {
-			return err
+			return fmt.Errorf("failed to open sbom file\n  ⤷ %w", err)
 		}
 	}
 	defer file.Close()
@@ -166,7 +166,7 @@ func (info *SbomPackageInfo) ReadFromFile() error {
 	decoder := json.NewDecoder(file)
 	err = decoder.Decode(info)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to decode sbom from json\n  ⤷ %w", err)
 	}
 
 	return nil
@@ -178,7 +178,7 @@ func (sbom *Sbom) ReadFromFile() error {
 		if errors.Is(err, os.ErrNotExist) {
 			return errors.New("an sbom file has not been initialized. use `sbom init <PACKAGE NAME>` to create one")
 		} else {
-			return err
+			return fmt.Errorf("failed to open sbom file\n  ⤷ %w", err)
 		}
 	}
 	defer file.Close()
@@ -186,7 +186,7 @@ func (sbom *Sbom) ReadFromFile() error {
 	decoder := json.NewDecoder(file)
 	err = decoder.Decode(sbom)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to decode sbom from json\n  ⤷ %w", err)
 	}
 
 	if sbom.Packages == nil {
@@ -202,7 +202,7 @@ func (sbom *Sbom) ReadFromFilePath(path string) error {
 		if errors.Is(err, os.ErrNotExist) {
 			return errors.New("an sbom file has not been initialized. use `sbom init <PACKAGE NAME>` to create one")
 		} else {
-			return err
+			return fmt.Errorf("failed to open sbom file\n  ⤷ %w", err)
 		}
 	}
 	defer file.Close()
@@ -210,7 +210,7 @@ func (sbom *Sbom) ReadFromFilePath(path string) error {
 	decoder := json.NewDecoder(file)
 	err = decoder.Decode(sbom)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to decode sbom from json\n  ⤷ %w", err)
 	}
 
 	if sbom.Packages == nil {
@@ -226,21 +226,21 @@ func (sbom *Sbom) WriteToFile() error {
 		if errors.Is(err, os.ErrNotExist) {
 			return errors.New("an sbom file has not been initialized. use `sbom init <PACKAGE NAME>` to create one")
 		} else {
-			return err
+			return fmt.Errorf("failed to open sbom file\n  ⤷ %w", err)
 		}
 	}
 	defer file.Close()
 
 	jsonString, err := sbom.ToJson()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to convert sbom to json\n  ⤷ %w", err)
 	}
 
 	file.Truncate(0)
 	file.Seek(0, 0)
 	_, err = file.WriteString(jsonString)
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to write sbom to file\n  ⤷ %w", err)
 	}
 
 	return nil
@@ -249,7 +249,7 @@ func (sbom *Sbom) WriteToFile() error {
 func (sbom *Sbom) ToJson() (string, error) {
 	jsonData, err := json.MarshalIndent(sbom, "", "    ")
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to marshal sbom to json\n  ⤷ %w", err)
 	}
 	return string(jsonData), nil
 }
@@ -257,7 +257,7 @@ func (sbom *Sbom) ToJson() (string, error) {
 func (info *SbomPackageInfo) ToJson() (string, error) {
 	jsonData, err := json.MarshalIndent(info, "", "    ")
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to marshal sbom info to json\n  ⤷ %w", err)
 	}
 	return string(jsonData), nil
 }

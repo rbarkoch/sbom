@@ -32,7 +32,7 @@ func (handler PackageHandler) Handle(args []string) error {
 	}
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to handle verb\n  ⤷ %w", err)
 	}
 
 	return nil
@@ -83,7 +83,7 @@ func (handler PackageHandler) print(args []string) error {
 	var sbom Sbom
 	err := sbom.ReadFromFile()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read sbom from file\n  ⤷ %w", err)
 	}
 
 	var jsonData []byte
@@ -114,7 +114,7 @@ func (handler PackageHandler) print(args []string) error {
 	}
 
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to serialize sbom packages\n  ⤷ %w", err)
 	}
 
 	fmt.Println(string(jsonData))
@@ -126,7 +126,7 @@ func (handler PackageHandler) add(args []string) error {
 	var sbom Sbom
 	err := sbom.ReadFromFile()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read sbom from file\n  ⤷ %w", err)
 	}
 
 	if len(args) == 0 {
@@ -148,14 +148,14 @@ func (handler PackageHandler) add(args []string) error {
 
 	err = pkg.PopulateFromFlags(args[1:])
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to populate package from arguments\n  ⤷ %w", err)
 	}
 
 	sbom.Packages[pkgName] = pkg
 
 	err = sbom.WriteToFile()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to write sbom file\n  ⤷ %w", err)
 	}
 
 	dto := map[string]*SbomPackage{
@@ -164,7 +164,7 @@ func (handler PackageHandler) add(args []string) error {
 
 	jsonData, err := json.MarshalIndent(dto, "", "    ")
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to serialize sbom packages\n  ⤷ %w", err)
 	}
 
 	fmt.Println(string(jsonData))
@@ -176,7 +176,7 @@ func (handler PackageHandler) remove(args []string) error {
 	var sbom Sbom
 	err := sbom.ReadFromFile()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read sbom from file\n  ⤷ %w", err)
 	}
 
 	if len(args) == 0 {
@@ -194,17 +194,20 @@ func (handler PackageHandler) remove(args []string) error {
 		delete(sbom.Packages, pkgName)
 		err = sbom.WriteToFile()
 		if err != nil {
-			return err
+			return fmt.Errorf("failed to write sbom file\n  ⤷ %w", err)
 		}
 		return nil
 	}
 
 	// Delete properties from the package.
-	sbom.Packages[pkgName].ClearFromFlags(args[1:])
+	err = sbom.Packages[pkgName].ClearFromFlags(args[1:])
+	if err != nil {
+		return fmt.Errorf("failed to clear sbom package information from arguments\n  ⤷ %w", err)
+	}
 
 	err = sbom.WriteToFile()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to write sbom file\n  ⤷ %w", err)
 	}
 
 	dto := map[string]*SbomPackage{
@@ -213,7 +216,7 @@ func (handler PackageHandler) remove(args []string) error {
 
 	jsonData, err := json.MarshalIndent(dto, "", "    ")
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to serialize sbom packages\n  ⤷ %w", err)
 	}
 
 	fmt.Println(string(jsonData))
@@ -229,13 +232,13 @@ func (handler PackageHandler) importFromFile(args []string) error {
 	var sbom Sbom
 	err := sbom.ReadFromFile()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read sbom from file\n  ⤷ %w", err)
 	}
 
 	var importSbom Sbom
 	err = importSbom.ReadFromFilePath(args[0])
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to read imported sbom from file\n  ⤷ %w", err)
 	}
 
 	pkgName := importSbom.PackageId
@@ -244,7 +247,7 @@ func (handler PackageHandler) importFromFile(args []string) error {
 
 	err = sbom.WriteToFile()
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to write sbom file\n  ⤷ %w", err)
 	}
 
 	dto := map[string]*SbomPackage{
@@ -253,7 +256,7 @@ func (handler PackageHandler) importFromFile(args []string) error {
 
 	jsonData, err := json.MarshalIndent(dto, "", "    ")
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to serialize sbom packages\n  ⤷ %w", err)
 	}
 
 	fmt.Println(string(jsonData))
